@@ -2,17 +2,17 @@
 Let’s see how F# language features make it simple to create a unit conversion service and deploy it to Azure Functions.
 
 ## Module 0: Background
+Q: Who made this Workshop?  
+A: Brett Rowberry, who works at ExxonMobil
 
-### Who made this Workshop?
-Brett Rowberry, who works at ExxonMobil
+Q: When was this workshop first given?  
+A: Friday September 27th, 2019 at Open F# in San Francisco
 
-### When was this workshop first given?
-Friday September 27th, 2019 at Open F# in San Francisco
+Q: How long does this workshop take?  
+A: 110 minutes
 
-### How long does this workshop take?
-110 minutes
-
-### What prerequisites will I need?
+Q: What prerequisites will I need?  
+A:
 - An Azure account
 - git (to clone this repository)
 - Visual Studio Code
@@ -22,16 +22,16 @@ Friday September 27th, 2019 at Open F# in San Francisco
 - .NET Core SDK 2.1
 - Azure Functions Core Tools
 
-### Why Azure Functions?
+Q: Why Azure Functions?  
+A:
+1. Why serverless?
+    - Potentially less expensive
+    - Potentially a simpler programming model
+2. Why Azure Functions and not AWS Lambda or other serverless offerings?
+    - I use Azure at work
 
-#### Why serverless?
-- Potentially less expensive
-- Potentially a simpler programming model
-
-#### Why Azure Functions and not AWS Lambda or other serverless offerings?
-- I use Azure at work
-
-### What are the programming/deployment models supported by Azure Functions?
+Q: What are the programming/deployment models supported by Azure Functions?  
+A:
 - [Script](https://docs.microsoft.com/en-gb/azure/azure-functions/functions-reference-fsharp)
 - Compiled (what we'll use in this workshop)
 - Container
@@ -42,27 +42,27 @@ There isn't an official F# template at the moment, so we'll start with a C# tuto
 1. Open the `module1` directory in Visual Studio Code
 2. Navigate to [Create your first function using Visual Studio Code](https://docs.microsoft.com/en-us/azure/azure-functions/functions-create-first-function-vs-code?WT.mc_id=devto-blog-aapowell)
 3. Here are the main sections that we will go over together:
-  1. Prerequisites  
+    1. Prerequisites  
     I think the easiest way is to:
-    1. Get Visual Studio Code
-    2. Install the `Azure Functions` extension
-    3. Allow the extension to help you install other prerequisites
-  2. Create your Functions project with a function (Create a folder called `1. CSharp`)
-  3. Run the function locally and call it
-  4. Publish the project to Azure 
-    - Use the basic publish option (not advanced)
-    - Name your app `module1<yourname>`
-    - Use the Azure region closest to you. We'll use `West US` region since we're in San Francisco.
-  5. Call the deployed API
+        1. Get Visual Studio Code
+        2. Install the `Azure Functions` extension
+        3. Allow the extension to help you install other prerequisites
+    2. Create your Functions project with a function (Create a folder called `1. CSharp`)
+    3. Run the function locally and call it
+    4. Publish the project to Azure 
+        - Use the basic publish option (not advanced)
+        - Name your app `module1<yourname>`
+        - Use the Azure region closest to you. We'll use `West US` region since we're in San Francisco.
+4. Call the deployed API
 
 ## Module 2: F# Azure Function
 1. Open the `module2` directory in Visual Studio Code
 2. Create the C# project again, this time using the Azure Functions extension GUI
-  - Change the function name to `HttpTriggerFSharp`
+    - Change the function name to `HttpTriggerFSharp`
 3. Navigate to [Azure Functions With F#](https://dev.to/azure/azure-functions-with-f-2l3c)
-  1. Copy the code to the source file and change the extension from `.cs` to `.fs` (Ionide might look really upset at the file for a while, don't worry!)
-  2. Change the extension of the project file from `.csproj` to `.fsproj`
-  3. In the `.fsproj` file below the first `<ItemGroup>` section paste
+    1. Copy the code to the source file and change the extension from `.cs` to `.fs` (Ionide might look really upset at the file for a while, don't worry!)
+    2. Change the extension of the project file from `.csproj` to `.fsproj`
+    3. In the `.fsproj` file below the first `<ItemGroup>` section paste
 
   ``` XML
   <ItemGroup>
@@ -70,7 +70,7 @@ There isn't an official F# template at the moment, so we'll start with a C# tuto
   </ItemGroup>
   ```
   4. `POST`s aren't very fun to test. Let's change the function to a `GET` that uses query parameters like in Module 1.
-    - Paste over the code with
+      - Paste over the code with
 
 ``` F#
 namespace Company.Function
@@ -111,7 +111,7 @@ module HttpTrigger =
     - Use the advanced publish option using the GUI or Command Palette
     - Name your app `module2<yourname>`
     - Accept all other defaults
-    - Choose Windows instead of Linux
+    - Choose `Windows` instead of `Linux`
       - [Streaming Logs "can't be used with an app running on Linux in a Consumption plan"](https://docs.microsoft.com/en-us/azure/azure-functions/functions-monitoring#streaming-logs)
 7. There will be a prompt to stream logs, accept it
 8. Call your app, inspect the logs
@@ -120,12 +120,12 @@ module HttpTrigger =
 9. Disable and reenable the app
 10. Run a test
 
-### Module 3: Unit Conversion Service
+## Module 3: Unit Conversion Service
 1. Open the `module3` directory in Visual Studio Code
 2. Create the same project as in module 2
-  - Change the function name to `UnitConversionAPI`
-  - This time we'll use route parameters instead of query parameters
-  - Here's the code:
+    - Name the app `UnitConversionAPI`
+    - This time we'll use route parameters instead of query parameters
+    - Here's the code:
 ``` F#
 namespace Company.Function
 
@@ -237,6 +237,8 @@ module LengthAPI =
             OkObjectResult r 
             :> ActionResult
 ```
+3. Run the function locally and call it
+4. Publish the project to Azure and call it
 
 ## More resources
 [F# in 10 Minutes or Less | Precompiled Azure Functions V2 in Visual Studio Code](https://www.youtube.com/watch?v=SSBc5ucHq2E)
