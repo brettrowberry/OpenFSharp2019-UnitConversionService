@@ -13,14 +13,14 @@ A: 110 minutes
 
 Q: What prerequisites will I need?  
 A:
-- An Azure account, [get a year for free here](https://azure.microsoft.com/free/)
+- An Azure account - [get a year for free here](https://azure.microsoft.com/free/)
 - [git](https://git-scm.com) (to clone this repository)
 - [Visual Studio Code](https://code.visualstudio.com)
 - Ionide extension (install through `Extensions` in Visual Studio Code`
 - Azure Functions extension
 - Node.js 8.5+ (used to install Azure Functions Core Tools on Windows)
 - [.NET Core 2.1 SDK](https://dotnet.microsoft.com/download/dotnet-core/2.1) - needed for Azure Functions Core Tools
-- Azure Functions Core Tools
+- [Azure Functions Core Tools](https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local#v2)
 
 Q: Why Azure Functions?  
 A:
@@ -47,9 +47,10 @@ There isn't an official F# template at the moment, so we'll start with a C# tuto
         1. Get Visual Studio Code
         2. Install the `Azure Functions` extension
         3. Allow the extension to help you install other prerequisites
-    2. Create your Functions project with a function (Create a folder called `1. CSharp`)
+    2. Create your Functions project using Visual Studio Code's Command Palette
+        - Accept all the defaults
     3. Run the function locally and call it
-    4. Publish the project to Azure 
+    4. Publish the project to Azure using Visual Studio Code's Command Palette
         - Use the basic publish option (not advanced)
         - Name your app `module1<yourname>`
         - Use the Azure region closest to you. We'll use `West US` region since we're in San Francisco.
@@ -59,7 +60,8 @@ There isn't an official F# template at the moment, so we'll start with a C# tuto
 1. Open the `module2` directory in Visual Studio Code
 2. Create the C# project again, this time using the Azure Functions extension GUI
     - Change the function name to `HttpTriggerFSharp`
-3. Navigate to [Azure Functions With F#](https://dev.to/azure/azure-functions-with-f-2l3c)
+    - Accept other defaults
+3. Navigate to [Azure Functions With F#](https://dev.to/azure/azure-functions-with-f-2l3c). Thank you Aaron Powell for your post and for allowing us to use it in this workshop!
     1. Copy the code to the source file and change the extension from `.cs` to `.fs` (Ionide might look really upset at the file for a while, don't worry!)
     2. Change the extension of the project file from `.csproj` to `.fsproj`
     3. In the `.fsproj` file below the first `<ItemGroup>` section paste
@@ -69,7 +71,8 @@ There isn't an official F# template at the moment, so we'll start with a C# tuto
     <Compile Include="HttpTriggerFSharp.fs" />
   </ItemGroup>
   ```
-  4. `POST`s aren't very fun to test. Let's change the function to a `GET` that uses query parameters like in Module 1.
+4. Run it to make sure it works
+5. `POST`s aren't very fun to test. Let's change the function to a `GET` that uses query parameters like in Module 1.
       - Paste over the code with
 
 ``` F#
@@ -81,6 +84,7 @@ open Microsoft.AspNetCore.Http
 open Microsoft.Extensions.Logging
 open Microsoft.AspNetCore.Mvc
 open System
+open Microsoft.Extensions.Primitives
 
 module HttpTrigger =
     [<FunctionName("HttpTrigger")>]
@@ -89,45 +93,40 @@ module HttpTrigger =
             log: ILogger) 
             = 
 
-        let name =
-            try
-                let maybeName = req.Query.["name"].[0]
-                if String.IsNullOrWhiteSpace maybeName 
-                then ValueNone
-                else ValueSome maybeName
-            with
-                | :? IndexOutOfRangeException -> ValueNone
+        let stringValues = req.Query.Item "name"
 
-        match name with
-        | ValueSome n -> 
-            log.LogInformation(sprintf "name was '%s'" n)
-            OkObjectResult(n) :> ActionResult
-        | ValueNone -> 
+        if StringValues.IsNullOrEmpty stringValues
+        then
             log.LogInformation("no name was passed")
             BadRequestObjectResult("Include a 'name' as a query string.") :> ActionResult
+        else 
+            let name = stringValues.[0]
+            log.LogInformation(sprintf "name was '%s'" name)
+            OkObjectResult(name) :> ActionResult
 ```
-5. Run the function locally and call it
-6. Publish the project to Azure
-    - Use the advanced publish option using the GUI or Command Palette
+6. Run the function locally and call it.
+    - Notice how the authorization switched from `Function` to `Anonymous`
+7. Publish the project to Azure using the GUI
+    - Choose the advanced publish option
     - Name your app `module2<yourname>`
-    - Accept all other defaults
     - Choose `Windows` instead of `Linux`
       - [Streaming Logs "can't be used with an app running on Linux in a Consumption plan"](https://docs.microsoft.com/en-us/azure/azure-functions/functions-monitoring#streaming-logs)
-7. There will be a prompt to stream logs, accept it
-8. Call your app, inspect the logs
-7. Navigate to https://portal.azure.com
-8. Select your Function App
-9. Disable and reenable the app
-10. Run a test
+    - Accept all other defaults
+8. There will be a prompt to stream logs, accept it
+9. Call your app, inspect the logs
+10. Navigate to https://portal.azure.com
+11. Select your Function App
+12. Disable and reenable the app
+13. Run a test
 
 ## Module 3: Unit Conversion Service
 1. Open the `module3` directory in Visual Studio Code
-2. Create the same project as in module 2
+2. Create the same project as in Module 2
     - Name the app `UnitConversionAPI`
     - This time we'll use route parameters instead of query parameters
     - Here's the code:
 ``` F#
-namespace Company.Function
+namespace API
 
 open System
 open Microsoft.AspNetCore.Http
@@ -192,7 +191,7 @@ module Length =
 ```
 5. Change your functions file to be:
 ``` F#
-namespace Company.Function
+namespace API
 
 open Microsoft.Azure.WebJobs
 open Microsoft.Azure.WebJobs.Extensions.Http
@@ -239,9 +238,10 @@ module LengthAPI =
 ```
 3. Run the function locally and call it
 4. Publish the project to Azure and call it
+    - Name your app `module3<yourname>`
 
 ## More resources
-[F# in 10 Minutes or Less | Precompiled Azure Functions V2 in Visual Studio Code](https://www.youtube.com/watch?v=SSBc5ucHq2E)
+- [F# in 10 Minutes or Less | Precompiled Azure Functions V2 in Visual Studio Code](https://www.youtube.com/watch?v=SSBc5ucHq2E)
 - [Using F# to write serverless Azure functions](https://blogs.msdn.microsoft.com/uk_faculty_connection/2017/03/24/using-f-to-write-serverless-azure-functions/) a little old
 - [Work with Azure Functions Core Tools](https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local)
 - [HTTP routing](https://docs.microsoft.com/en-us/sandbox/functions-recipes/routes?tabs=fsharp)
