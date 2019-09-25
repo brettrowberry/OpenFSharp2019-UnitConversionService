@@ -13,13 +13,13 @@ A: 110 minutes
 
 Q: What prerequisites will I need?  
 A:
-- An Azure account
-- git (to clone this repository)
-- Visual Studio Code
-- Ionide extension
+- An Azure account, [get a year for free here](https://azure.microsoft.com/free/)
+- [git](https://git-scm.com) (to clone this repository)
+- [Visual Studio Code](https://code.visualstudio.com)
+- Ionide extension (install through `Extensions` in Visual Studio Code`
 - Azure Functions extension
-- Node.js 8.5+ (may be optional)
-- .NET Core SDK 2.1
+- Node.js 8.5+ (used to install Azure Functions Core Tools on Windows)
+- [.NET Core 2.1 SDK](https://dotnet.microsoft.com/download/dotnet-core/2.1) - needed for Azure Functions Core Tools
 - Azure Functions Core Tools
 
 Q: Why Azure Functions?  
