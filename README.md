@@ -16,10 +16,12 @@ A:
 - An Azure account - [get a year for free here](https://azure.microsoft.com/free/)
 - [git](https://git-scm.com) (to clone this repository)
 - [Visual Studio Code](https://code.visualstudio.com)
-- Ionide extension (install through `Extensions` in Visual Studio Code`
+- Ionide extension (install through `Extensions` in Visual Studio Code`)
 - Azure Functions extension
 - Node.js 8.5+ (used to install Azure Functions Core Tools on Windows)
 - [.NET Core 2.1 SDK](https://dotnet.microsoft.com/download/dotnet-core/2.1) - needed for Azure Functions Core Tools
+    - See which versions you have [How to remove the .NET Core Runtime and SDK](https://docs.microsoft.com/en-us/dotnet/core/versions/remove-runtime-sdk-versions)
+        - `dotnet --list-sdks`
 - [Azure Functions Core Tools](https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local#v2)
 
 Q: Why Azure Functions?  
