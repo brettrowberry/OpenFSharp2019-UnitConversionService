@@ -57,6 +57,7 @@ There isn't an official F# template at the moment, so we'll start with a C# tuto
 ## Module 2: F# Azure Function
 1. Open the `module2` directory in Visual Studio Code
 2. Create the C# project again, this time using the Azure Functions extension GUI
+    - The button looks like a folder with a lightning bolt and the tooltip says `Create New Project...`
     - Change the function name to `HttpTriggerFSharp`
     - Accept other defaults
 3. Navigate to [Azure Functions With F#](https://dev.to/azure/azure-functions-with-f-2l3c). Thank you Aaron Powell for your post and for allowing us to use it in this workshop!
