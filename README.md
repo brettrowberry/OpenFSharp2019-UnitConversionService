@@ -44,11 +44,7 @@ There isn't an official F# template at the moment, so we'll start with a C# tuto
 1. Open the `module1` directory in Visual Studio Code
 2. Navigate to [Create your first function using Visual Studio Code](https://docs.microsoft.com/en-us/azure/azure-functions/functions-create-first-function-vs-code?WT.mc_id=devto-blog-aapowell)
 3. Here are the main sections that we will go over together:
-    1. Prerequisites  
-    I think the easiest way is to:
-        1. Get Visual Studio Code
-        2. Install the `Azure Functions` extension
-        3. Allow the extension to help you install other prerequisites
+    1. Prerequisites
     2. Create your Functions project using Visual Studio Code's Command Palette
         - Accept all the defaults
     3. Run the function locally and call it
