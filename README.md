@@ -49,7 +49,7 @@ There isn't an official F# template at the moment, so we'll start with a C# tuto
         - Accept all the defaults
     3. Run the function locally and call it
     4. Publish the project to Azure using Visual Studio Code's Command Palette
-        - Use the basic publish option (not advanced)
+        - Use the basic publish option (not advanced), `Azure Functions: Deploy to Function App...`
         - Name your app `module1<yourname>`
         - Use the Azure region closest to you. We'll use `West US` region since we're in San Francisco.
 4. Call the deployed API
