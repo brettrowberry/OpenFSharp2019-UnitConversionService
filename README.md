@@ -104,12 +104,13 @@ module HttpTrigger =
             OkObjectResult(name) :> ActionResult
 ```
 6. Run the function locally and call it.
-    - Notice how the authorization switched from `Function` to `Anonymous`
+    - Note that we switched the authorization from `Function` to `Anonymous`
 7. Publish the project to Azure using the GUI
     - Choose the advanced publish option
     - Name your app `module2<yourname>`
     - Choose `Windows` instead of `Linux`
       - [Streaming Logs "can't be used with an app running on Linux in a Consumption plan"](https://docs.microsoft.com/en-us/azure/azure-functions/functions-monitoring#streaming-logs)
+    - Choose `.NET` for runtime
     - Accept all other defaults
 8. There will be a prompt to stream logs, accept it
 9. Call your app, inspect the logs
