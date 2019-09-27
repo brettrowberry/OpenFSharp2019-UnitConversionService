@@ -157,11 +157,6 @@ open System.Collections.Generic
 open System.Linq
 open System
 
-type ConversionResult =
-| NameNotFound of unitName : string * validUnits: string
-| NamesNotFound of unitName : string * otherUnitName : string * validUnits: string
-| Success of float
-
 module Length =
     let private lengthsAndFactors =
         let fsharpDict =
@@ -172,10 +167,9 @@ module Length =
         Dictionary<string, float>(fsharpDict)
 
     let private tryGetUnitFactor name =
-        let found, conversionFactor = lengthsAndFactors.TryGetValue name
-        if found
-        then Some conversionFactor
-        else None
+        match lengthsAndFactors.TryGetValue name with
+        | true, factor -> Some factor
+        | _ -> None
 
     let private lengths = 
         let lengths = lengthsAndFactors.Keys.ToArray()
@@ -183,11 +177,14 @@ module Length =
 
     let convert source target input =
         match (tryGetUnitFactor source, tryGetUnitFactor target)  with
-        | None, Some _ -> NameNotFound (source, lengths)
-        | Some _, None -> NameNotFound (target, lengths)
-        | None, None -> NamesNotFound (source, target, lengths)
+        | None, Some _ ->
+            sprintf "Length unit '%s' not found. Try %s." source lengths |> Error
+        | Some _, None -> 
+            sprintf "Length unit '%s' not found. Try %s." target lengths |> Error
+        | None, None -> 
+            sprintf "Length units '%s' and '%s' not found. Try %s." source target lengths |> Error
         | Some s, Some t -> 
-            input * s / t |> Success
+            input * s / t |> Ok
 ```
 5. Change your functions file to be:
 ``` F#
@@ -214,27 +211,12 @@ module LengthAPI =
         let inputs = String.Join("|", source, target, input)
         log.LogInformation(sprintf "Inputs: '%s'" inputs)
         
-        let result = convert source target input
-        match result with
-        | NameNotFound (s, lengths) ->
-            let message = (sprintf "Length unit '%s' not found. Try %s." s lengths)
-            log.LogError message
-
-            message
-            |> NotFoundObjectResult
-            :> ActionResult
-        | NamesNotFound (s, t, lengths) -> 
-            let message = (sprintf "Length units '%s' and '%s' not found. Try %s." s t lengths)
-            log.LogError message
-
-            message
-            |> NotFoundObjectResult
-            :> ActionResult
-        | Success r -> 
-            log.LogInformation (sprintf "Conversion result: %f" r)
-
-            OkObjectResult r 
-            :> ActionResult
+        match Length.convert source target input with
+        | Ok result ->
+            log.LogInformation (sprintf "Conversion result: %f" result)
+            OkObjectResult result :> ActionResult
+        | Error msg ->
+            NotFoundObjectResult msg :> ActionResult
 ```
 3. Run the function locally and call it
 4. Publish the project to Azure and call it
